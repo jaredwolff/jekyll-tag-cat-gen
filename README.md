@@ -11,11 +11,12 @@ Plugins included in this repository:
 
 Usage
 -----
-Or for categories:
 
-                category: automobiles
+### For both generators:
 
+Add this plugin as a submodule to your git repo:
 
+                git submodule add git@github.com:jaredwolff/tag_cat_gen.git _plugins/tag_cat_gen
 
 ### tag\_gen.rb
 
@@ -32,30 +33,49 @@ Create a layout generator:
 Put this code in the layout file:
 
                 ---
-                layout: default
+                layout: blog
                 ---
-                <h2 class="post_title">{.{page.title}}</h2>
-                <ul>
-                  {.% for post in site.posts %}
-                  {.% for tag in post.tags %}
-                  {.% if tag == page.tag %}
-                  <li class="archive_list">
-                    <time style="color:#666;font-size:11px;" datetime='{.{post.date | date: "%Y-%m-%d"}}'>{.{post.date | date: "%m/%d/%y"}}</time> <a class="archive_list_article_link" href='{.{post.url}}'>{.{post.title}}</a>
-                    <p class="summary">{.{post.summary}}
-                    <ul class="tag_list">
-                      {.% for tag in post.tags %}
-                      <li class="inline archive_list"><a class="tag_list_link" href="/tag/{.{ tag }}">{.{ tag }}</a></li>
-                      {.% endfor %}
-                    </ul>
-                  </li>
-                  {.% endif %}
-                  {.% endfor %}
-                  {.% endfor %}
-                </ul>
-
-Add this plugin as a submodule to your git repo:
-
-                git submodule add 
+                <div class="content-window">
+                  <h2 class="post-title">{{page.title}}</h2>
+                  <ul class="unstyled">
+                    {% for post in site.posts %}
+                    {% for tag in post.tags %}
+                    {% if tag == page.tag %}
+                    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
 
 ### category\_gen.rb
 
+Add tags in a post like this:
+
+                category: automobiles
+
+Create a layout generator:
+
+                _layouts/category_index.html
+
+Put this code in the layout file:
+
+                ---
+                layout: blog
+                ---
+                <div class="content-window">
+                  <h2 class="post-title">{{page.title}}</h2>
+                  <ul class="unstyled">
+                    {% for post in site.posts %}
+                    {% for category in post.categories %}
+                    {% if category == page.category %}
+                    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ site.url }}{{ post.url }}">{{ post.title }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
+
+###Final note:
+
+Customize as to your needs.
